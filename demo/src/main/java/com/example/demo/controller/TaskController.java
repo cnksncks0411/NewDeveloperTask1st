@@ -27,7 +27,7 @@ public class TaskController {
 	
 	// 파일 업로드 결과 페이지
 	@RequestMapping("/response")
-	public String doUpload(MultipartFile file, Model model) {
+	public String response(MultipartFile file, Model model) {
 		HashMap<String, Object> map = taskService.read(file);
 		model.addAttribute("map", map);
 		return "/response";
@@ -38,7 +38,7 @@ public class TaskController {
 	@RequestMapping("/selectData")
 	public JSONArray selectData(Model model) {
 		List<TaskDto> list = taskService.selectData();
-		JSONArray arr = new JSONArray();
+		JSONArray jsonArr = new JSONArray();
 		
 		for(TaskDto td:list) {
 			JSONObject obj = new JSONObject();
@@ -48,9 +48,9 @@ public class TaskController {
 			obj.put("level",td.getLevel());
 			obj.put("desc",td.getDesc());
 			obj.put("reg_date",td.getReg_date());
-			arr.add(obj);
+			jsonArr.add(obj);
 		}
 
-		return arr;
+		return jsonArr;
 	}
 }
