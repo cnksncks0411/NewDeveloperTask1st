@@ -53,14 +53,14 @@ $(function(){
 </head>
 <body>
 	<!-- 입력에 성공한 라인 수와 전체 라인 수 비교 -->
-	<c:if test="${map.success==map.count}">
+	<c:if test="${map.success==map.count }">
 		<h2>레코드건수 : ${map.count }건 입력 성공</h2>
 		<input type="button" value="레코드 조회" id="result">
 		<div id="dataTable">
 		</div>
 	</c:if>
 
-	<c:if test="${map.success!=map.count}">
+	<c:if test="${map.success!=map.count }">
 		<h2>성공 : ${map.success }건, 실패 : ${map.count-map.success }</h2>
 		<c:forEach items="${map.failList }" var="fail">
 			<p>실패한 라인 번호 : ${fail[0] }</p>
