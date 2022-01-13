@@ -60,7 +60,7 @@ $(function(){
 		</div>
 	</c:if>
 
-	<c:if test="${map.success!=map.count || map.success==0}">
+	<c:if test="${map.success!=map.count}">
 		<h2>성공 : ${map.success }건, 실패 : ${map.count-map.success }</h2>
 		<c:forEach items="${map.failList }" var="fail">
 			<p>실패한 라인 번호 : ${fail[0] }</p>

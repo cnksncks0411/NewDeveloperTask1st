@@ -34,18 +34,19 @@ public class TaskServiceImpl implements TaskService {
 		ArrayList<ArrayList<Object>> failList = new ArrayList<ArrayList<Object>>();
 		
 		try {
-			file.transferTo(f);
-			FileReader reader = new FileReader(f);
-			BufferedReader bufReader = new BufferedReader(reader);
+			file.transferTo(f);	// 파일 저장
+			FileReader reader = new FileReader(f);	// 파일 읽어오기
+			BufferedReader bufReader = new BufferedReader(reader);	// 파일 내용 라인별로 읽어오기 위해 사용
 			String line = "";
 			
 			// 파일 내용 한 줄씩 읽기
 			while((line=bufReader.readLine())!=null){
 				String[] list = line.split("/");
+				// list[0]=id, list[1]=pwd, list[2]=name, list[3]=level, list[4]=desc, list[5]=reg_date
 				TaskDto tDto = new TaskDto(list[0],list[1],list[2],list[3].charAt(0),list[4],Timestamp.valueOf(list[5]));
 				count++;
 				try {
-					taskMapper.insertFile(tDto);
+					taskMapper.insertFile(tDto);	// 파일 내용 DB에 저장
 					success++;
 				}catch (Exception e) {
 					ArrayList<Object> arr = new ArrayList<Object>();
