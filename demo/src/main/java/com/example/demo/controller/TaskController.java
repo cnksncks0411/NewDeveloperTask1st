@@ -39,7 +39,7 @@ public class TaskController {
 	public JSONArray selectData(Model model) {
 		List<TaskDto> list = taskService.selectData();
 		JSONArray jsonArr = new JSONArray();
-		
+
 		for(TaskDto td:list) {
 			JSONObject obj = new JSONObject();
 			obj.put("id",td.getId());

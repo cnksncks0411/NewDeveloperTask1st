@@ -18,7 +18,6 @@ $(function(){
 			contentType:"application/json; charset=utf-8;",
 			datatype:"json",	/* json타입으로 받아오기 */
 			success:function(data){
-				console.log(data);
 				/* 등록된 데이터 테이블 형식으로 가져오기 */
 				var html = "<h3>User 테이블 전체 등록 데이터</h3>"
 				html +="<table><tr><td>ID</td><td>PWD</td><td>NAME</td><td>LEVEL</td><td>DESC</td><td>REG_DATE</td></tr>";
@@ -60,11 +59,12 @@ $(function(){
 		</div>
 	</c:if>
 
-	<c:if test="${map.success!=map.count || map.success==0}">
+	<c:if test="${map.success!=map.count}">
 		<h2>성공 : ${map.success }건, 실패 : ${map.count-map.success }</h2>
 		<c:forEach items="${map.failList }" var="fail">
+			<!-- fail[0]=lineNum fail[1]=lineTxt -->
 			<p>실패한 라인 번호 : ${fail[0] }</p>
-			<p>실패한 라인 텍스트 : ${fail[1]}</p>
+			<p>실패한 라인 텍스트 : ${fail[1] }</p>
 		</c:forEach>
 			
 	</c:if>
