@@ -13,6 +13,8 @@
 		if(${result } > 0){
 			alert("회원가입에 성공했습니다!");
 			location.href="/index";
+		}else if(${result }==0){
+			alert("서버 오류로 회원가입에 실패했습니다! 다시 시도해주세요!");
 		}
 	});	// index로 이동 끝
 </script>
@@ -54,6 +56,7 @@
 						}else{
 							alert("사용 가능한 아이디입니다.");
 							$("#pw").focus();
+							$("#clickChk").val("ok");
 						}
 					},
 					error:function(textStatus, errorThrown){
@@ -100,7 +103,16 @@
 			var patternEmail1 = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*$/;
 			var patternEmail2 = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/;
 			
-			if(patternName.test($("#name").val()) != true){
+			if($("#clickChk").val()=="no"){
+				alert("아이디 중복확인을 해주세요.");
+				return false;
+			}else if($("#pw").val()==""){
+				alert("비밀번호를 입력해주세요.");
+				return false;
+			}else if($("#pw").val() != $("#pw2").val()){
+				alert("비밀번호를 확인해주세요.");
+				return false;
+			}else if(patternName.test($("#name").val()) != true){
 				alert("* 이름은 한글로만 입력 해주세요.");
 				$("#name").val("");
 				$("#name").focus();
@@ -110,13 +122,16 @@
 				$("#phone").val("");
 				$("#phone").focus();
 				return false;
-			}else if(patternEmail1.test($("#email1").val()) != true){
+			}else if(patternEmail1.test($("#email").val()) != true){
 				alert("이메일 앞 부분이 잘못 입력 되었습니다. 다시 입력 해주세요.");
-				$("#email1").val("");
-				$("#email1").focus();
+				$("#email").val("");
+				$("#email").focus();
 				return false;
 			}else if (patternEmail2.test($("#email2").val()) != true) {
 				alert("이메일 뒷 부분이 잘못 입력 되었습니다. 다시 입력 해주세요.");
+				return false;
+			}else if($("#addr").val()==""){
+				alert("주소를 입력하지 않으셨습니다.");
 				return false;
 			}
 		});
@@ -154,38 +169,39 @@
 	<form action="/doJoin" method="post" name="dojoin" id="join">
 		<table>
 			<tr>
-				<td class="title">아이디 :</td>
-				<td><input type="text" name="id" id="id"></td>
+				<td class="title">아이디* :</td>
+				<td><input type="text" name="id" id="id" maxlength="16"></td>
 				<td><input type="button" value="중복확인" id="idCheck"></td>
+				<td><input type="hidden" id="clickChk" value="no"/></td>
 			</tr>
 			<tr>
 				<td colspan="3" class="notice">※ 첫 글자는 영문으로 4~16자 까지 가능, 영문,숫자만 사용 가능</td>
 			</tr>
 			<tr>
-				<td class="title">비밀번호 :</td>
+				<td class="title">비밀번호* :</td>
 				<td><input type="password" name="pw" id="pw" maxlength="15" /></td>
 			</tr>
 			<tr>
 				<td colspan="3" class="notice">※ 영문/숫자 혼용으로 4~15자 까지 가능</td>
 			</tr>
 			<tr>
-				<td class="title">비밀번호 확인 :</td>
+				<td class="title">비밀번호 확인* :</td>
 				<td><input type="password" id="pw2" maxlength="15" /></td>
 			</tr>
 			<tr>
 				<td colspan="3" id="pwtxt"><td>
 			</tr>
 			<tr>
-				<td class="title">이름 :</td>
-				<td><input type="text" name="name" id="name"></td>
+				<td class="title">이름* :</td>
+				<td><input type="text" name="name" id="name" maxlength="10"></td>
 			</tr>
 			<tr>
-				<td class="title">전화번호 :</td>
+				<td class="title">전화번호* :</td>
 				<td><input type="text" name="phone" id="phone" maxlength="11" placeholder="'-'를 제외하고 입력해주세요" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" /></td>
 			</tr>
 			<tr>
-				<td class="title">이메일 :</td>
-				<td><input type="text" name="email" id="email" />@<input type="text" name="email2" id="email2" /> <select id="emailList" name="emailList">
+				<td class="title">이메일* :</td>
+				<td><input type="text" name="email" id="email" maxlength="20"/>@<input type="text" name="email2" id="email2" /> <select id="emailList" name="emailList">
 						<option value="" selected="selected">::직접입력::</option>
 						<option value="naver.com">네이버</option>
 						<option value="daum.net">다음</option>
@@ -195,7 +211,7 @@
 				</select></td>
 			</tr>
 			<tr>
-				<td class="title">주소 :</td>
+				<td class="title">주소* :</td>
 				<td><input type="text" id="zipcode" name="zipcode" readonly /><a
 					href="javascript:;" onclick="zipSearch()"><button type="button">우편번호 찾기</button></a></td>
 			</tr>

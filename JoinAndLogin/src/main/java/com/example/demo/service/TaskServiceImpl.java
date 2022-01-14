@@ -14,11 +14,17 @@ public class TaskServiceImpl implements TaskService {
 	
 	// 회원가입 기능
 	@Override
-	public int doJoin(TaskDto tDto) {
+	public int doJoin(TaskDto tDto)  {
 		// 이메일 앞 부분과 뒷 부분 @로 연결
 		String email = tDto.getEmail()+"@"+tDto.getEmail2();
 		tDto.setEmail(email);
-		int result = taskMapper.doJoin(tDto);
+		int result = 0;
+		try {
+			result = taskMapper.doJoin(tDto);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println(result);
 		return result;
 	}
 
