@@ -24,16 +24,15 @@
 		getid();
 		$("#saveId").click(function(){
 			saveid();
-		}); //#chkuser_id.click
-	}); //function(){
+		});
+	});
 	  
 	function saveid() {
 		var expdate = new Date();
-		// 기본적으로 30일동안 기억하게 함. 일수를 조절하려면 * 30에서 숫자를 조절하면 됨
 		if($("#saveId").prop("checked")){
 			expdate.setTime(expdate.getTime() + 1000 * 3600 * 24 * 30); // 30일
 	   	}else {
-	    	expdate.setTime(expdate.getTime() - 1); // 쿠키 삭제조건
+	    	expdate.setTime(expdate.getTime() - 1);
 	   	}
 	   		setCookie("saveid", $("#id").val(), expdate);
 	} //saveid()
@@ -44,9 +43,11 @@
 
 	function getCookie(Name) {
 		var search = Name + "=";
-	    if (document.cookie.length > 0) { // 쿠키가 설정되어 있다면
+		// 쿠키가 설정되어 있다면
+	    if (document.cookie.length > 0) { 
 	    	offset = document.cookie.indexOf(search);
-		    if (offset != -1) { // 쿠키가 존재하면
+	    	// 쿠키가 존재하면
+	    	if (offset != -1) { 
 		        offset += search.length;
 		        // set index of beginning of value
 		        end = document.cookie.indexOf(";", offset);
