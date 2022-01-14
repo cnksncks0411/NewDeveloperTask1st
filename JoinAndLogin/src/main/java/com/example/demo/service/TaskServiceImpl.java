@@ -24,7 +24,6 @@ public class TaskServiceImpl implements TaskService {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println(result);
 		return result;
 	}
 
