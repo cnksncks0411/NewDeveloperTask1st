@@ -32,6 +32,7 @@
 				<td><input type="password" name="pw" id="pw"></td>
 			</tr>
 			<tr>
+				<td><input type="checkbox" name="autoLogin" id="autoLogin"><label for="autoLogin">자동 로그인</label></td>
 				<td><input type="submit" value="로그인"></td>
 			</tr>
 		</table>

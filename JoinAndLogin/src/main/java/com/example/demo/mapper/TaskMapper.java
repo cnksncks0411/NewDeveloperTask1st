@@ -1,5 +1,8 @@
 package com.example.demo.mapper;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.demo.dto.TaskDto;
@@ -15,4 +18,10 @@ public interface TaskMapper {
 	
 	// 로그인 기능
 	TaskDto doLogin(TaskDto taskDto);
+	
+	// 자동 로그인
+	void autoLogin(String id, String sessionId, Timestamp sessionlimit);
+	
+	// 쿠키 정보 있는 지 확인
+	TaskDto checkTime(String sessionId);
 }

@@ -17,4 +17,14 @@
 	<select id="doLogin" resultType="com.example.demo.dto.TaskDto">
 		select * from "USER_INFO" where id=#{id} and pw=#{pw}
 	</select>
+	
+	<!-- 자동 로그인 -->
+	<update id="autoLogin">
+		update "USER_INFO" set sessionkey = #{sessionId}, sessionlimit = #{sessionlimit} where id=#{id}
+	</update>
+	
+	<!-- 쿠키 시간 유지 동안 사용자 정보 가져오기 -->
+	<select id="checkTime" resultType="com.example.demo.dto.TaskDto">
+		select * from "USER_INFO" where sessionkey=#{sessionId } and sessionlimit>now()
+	</select>
 </mapper>

@@ -1,5 +1,10 @@
 package com.example.demo.service;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -41,4 +46,16 @@ public class TaskServiceImpl implements TaskService {
 		return tDto;
 	}
 
+	// 자동 로그인
+	@Override
+	public void autoLogin(String id, String sessionId, Timestamp sessionlimit) {
+		taskMapper.autoLogin(id, sessionId, sessionlimit);
+	}
+
+	// 쿠키 정보 있는 지 확인
+	@Override
+	public TaskDto checkTime(String sessionId) {
+		TaskDto tDto = taskMapper.checkTime(sessionId);
+		return tDto;
+	}
 }

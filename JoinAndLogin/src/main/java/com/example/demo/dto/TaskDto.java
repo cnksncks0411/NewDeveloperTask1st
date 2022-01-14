@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class TaskDto {
 
 	private String id, pw, name, phone, email, email2, addr;
+	private boolean autoLogin;
 }
