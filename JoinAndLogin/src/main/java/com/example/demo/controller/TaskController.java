@@ -95,7 +95,7 @@ public class TaskController {
 				Cookie auto = new Cookie("info",session.getId());
 				auto.setPath("/");
 				// 쿠키 유지 시간 2분
-				int amount = 60*2;
+				int amount = 60*5;
 				auto.setMaxAge(amount);
 				response.addCookie(auto);
 				// 쿠키 만료 시간
