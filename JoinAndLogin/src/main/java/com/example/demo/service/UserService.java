@@ -7,11 +7,19 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.UserDto;
+import com.example.demo.exception.ErrorCode;
+import com.example.demo.exception.ErrorException;
+import com.example.demo.exception.SignupResultFields;
 import com.example.demo.mapper.UserMapper;
 
 @Service
@@ -25,34 +33,44 @@ public class UserService{
 		String regDate = userDto.getRegDate().replace('T', ' ');
 		regDate +=":00";
 		userDto.setRegDate(regDate);
-		
+		Date userBirthday = getUserBirthday(userDto.getRegDate());
+		Date now = new Date();
 		int result = 0;
 		
-		try {
-			result = userMapper.join(userDto);
-		} catch (Exception e) {
-			e.printStackTrace();
-			// 회원가입 실패 시 백업된 파일에 저장하기
-			// 기존 백업파일에 이어 붙이기
+		if(userBirthday.after(now)) {
+			// BAD_REQUEST
+			// 입력한 생년월일이 현재 시간보다 늦으면 에러 출력
+			SignupResultFields s = new SignupResultFields("regDate","생년월일은 현재 시간보다 늦을 수 없습니다.");
+			List<SignupResultFields> fields = new ArrayList<SignupResultFields>();
+			fields.add(s);
+			throw new ErrorException(ErrorCode.NUMBER_1002,"입력항목 오류",true,fields);
+		}else {
 			try {
-				// 저장된 데이터 파일 읽어와 이어쓰기
-				BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(createFile(),true));
-				bufferedWriter.newLine();
-				bufferedWriter.write("\""+userDto.getId()+"\""
-								+"/\""+userDto.getPw()+"\""
-								+"/\""+userDto.getName()+"\""
-								+"/"+"\"\""
-								+"/"+"\"\""
-								+"/"+"\"\""
-								+"/"+"\"none\""
-								+"/"+"\"\""
-								+"/\""+userDto.getLevel()+"\""
-								+"/\""+userDto.getDesc()+"\""
-								+"/\""+userDto.getRegDate()+"\"");
-				bufferedWriter.close();
-				result=1;
-			} catch (IOException e1) {
-				e1.printStackTrace();
+				result = userMapper.join(userDto);
+			} catch (Exception e) {
+				e.printStackTrace();
+				// 회원가입 실패 시 백업된 파일에 저장하기
+				// 기존 백업파일에 이어 붙이기
+				try {
+					// 저장된 데이터 파일 읽어와 이어쓰기
+					BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(createFile(),true));
+					bufferedWriter.newLine();
+					bufferedWriter.write("\""+userDto.getId()+"\""
+									+"/\""+userDto.getPw()+"\""
+									+"/\""+userDto.getName()+"\""
+									+"/"+"\"\""
+									+"/"+"\"\""
+									+"/"+"\"\""
+									+"/"+"\"none\""
+									+"/"+"\"\""
+									+"/\""+userDto.getLevel()+"\""
+									+"/\""+userDto.getDesc()+"\""
+									+"/\""+userDto.getRegDate()+"\"");
+					bufferedWriter.close();
+					result=1;
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 		}
 		return result;
@@ -190,5 +208,22 @@ public class UserService{
 	public File createFile() {
 		File backupFile = new File("C:/backup/dataBackup.csv");
 		return backupFile;
+	}
+	
+	// 유저 생년월일 얻기
+	public Date getUserBirthday(String regDate) {
+		SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date userBirthday = null;
+		try {
+			userBirthday = transFormat.parse(regDate);
+		} catch (ParseException e2) {
+			e2.printStackTrace();
+			// 기타 오류
+			SignupResultFields s = new SignupResultFields("","알 수 없음");
+			List<SignupResultFields> fields = new ArrayList<SignupResultFields>();
+			fields.add(s);
+			throw new ErrorException(ErrorCode.NUMBER_1003,"기타 오류",true,fields);
+		}
+		return userBirthday;
 	}
 }
