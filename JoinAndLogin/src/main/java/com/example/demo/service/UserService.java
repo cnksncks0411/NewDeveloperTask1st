@@ -40,7 +40,7 @@ public class UserService{
 		if(userBirthday.after(now)) {
 			// BAD_REQUEST
 			// 입력한 생년월일이 현재 시간보다 늦으면 에러 출력
-			SignupResultFields s = new SignupResultFields("regDate","생년월일은 현재 시간보다 늦을 수 없습니다.");
+			SignupResultFields s = new SignupResultFields("생년월일","생년월일은 현재 시간보다 늦을 수 없습니다.");
 			List<SignupResultFields> fields = new ArrayList<SignupResultFields>();
 			fields.add(s);
 			throw new ErrorException(ErrorCode.NUMBER_1002,"입력항목 오류",true,fields);
