@@ -1,6 +1,5 @@
 package com.example.demo.exception;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -10,10 +9,10 @@ import lombok.Builder;
 @Builder
 public class ErrorResponse{
 	
-	private int code;
-	private String message;
+	private int code=0;
+	private String message = null;
 	private boolean hasFieldsError = true;
-	private List<SignupResultFields> fields = new ArrayList<SignupResultFields>();
+	private List<SignupResultFields> fields = null;
 	
 	public ErrorResponse() {
 		

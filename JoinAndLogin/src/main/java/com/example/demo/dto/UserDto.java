@@ -2,8 +2,13 @@ package com.example.demo.dto;
 
 public class UserDto {
 	// getter, setter, constructor 직접 생성
-	private String id, pw, name, level, desc, regDate;
-	private boolean autoLogin;
+	private String id = null;
+	private String pw = null;
+	private String name = null;
+	private String level = null;
+	private String desc = null;
+	private String regDate = null;
+	private boolean autoLogin = true;
 	
 	public UserDto(){
 		

@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import com.example.demo.dto.UserDto;
-import com.example.demo.service.UserService;
+import com.example.demo.service.UserDataService;
 
 @Controller
 @RequestMapping("/user")
@@ -24,14 +25,16 @@ import com.example.demo.service.UserService;
 public class UserFunctionController{
 
 	@Autowired
-	UserService userService;
+	// @Qualifier("userServicePostgreSQL") => DB 연결
+	// @Qualifier("userServiceNoneDB") => 백업 파일 연결
+	@Qualifier("userServicePostgreSQL")
+	UserDataService userDataService;
 	
 	// 회원가입 기능 구현
 	@PostMapping("/join")
 	public String join(UserDto userDto, Model model) {
-		int result = userService.join(userDto);
+		int result = userDataService.join(userDto);
 		model.addAttribute("result", result);
-
 		return "/user/signup";
 	}
 	
@@ -39,7 +42,7 @@ public class UserFunctionController{
 	@ResponseBody
 	@RequestMapping(value="/checkId")
 	public int idDuplicationCheck(@RequestParam("id") String id) {
-		int result = userService.idDuplicationCheck(id);
+		int result = userDataService.idDuplicationCheck(id);
 		return result;
 	}
 	
@@ -47,8 +50,7 @@ public class UserFunctionController{
 	@PostMapping("/login")
 	public String login(HttpSession session, UserDto userDto, Model model, HttpServletResponse response) {
 		try {
-			UserDto uDto = userService.login(userDto);
-			
+			UserDto uDto = userDataService.login(userDto);
 			if(uDto!=null) {
 				model.addAttribute("login", uDto);
 				// 자동 로그인 체크 했을 경우
@@ -62,7 +64,7 @@ public class UserFunctionController{
 					// 쿠키 만료 시간
 					Timestamp sessionlimit = new Timestamp(System.currentTimeMillis()+(1000*amount));
 					// 해당 유저 id에 세션key, 만료시간 저장
-					userService.autoLogin(uDto.getId(), session.getId(), sessionlimit);
+					userDataService.autoLogin(uDto.getId(), session.getId(), sessionlimit);
 				}
 			}else {
 				int result = 1;
@@ -72,9 +74,6 @@ public class UserFunctionController{
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		return "redirect:/user/main";
 	}
-	
-	
 }

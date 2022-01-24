@@ -6,9 +6,9 @@ public class ErrorException extends RuntimeException{
 	private static final long serialVersionUID = 7222755606311598747L;
 	
 	private final ErrorCode errorCode;
-	private String message;
-	private boolean hasFieldsError;
-	private List<SignupResultFields> fields;
+	private String message = null;
+	private boolean hasFieldsError = true;
+	private List<SignupResultFields> fields = null;
 	
 	public ErrorException(ErrorCode errorCode, String message, boolean hasFieldsError, List<SignupResultFields> fields){
 		this.errorCode = errorCode;
