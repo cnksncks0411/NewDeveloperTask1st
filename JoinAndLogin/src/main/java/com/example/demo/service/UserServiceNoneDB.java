@@ -9,10 +9,14 @@ import java.io.IOException;
 import java.sql.Timestamp;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.Errors;
+import org.springframework.validation.FieldError;
 
 import com.example.demo.dto.UserDto;
 import com.example.demo.exception.ErrorCode;
@@ -42,7 +46,7 @@ public class UserServiceNoneDB implements UserDataService{
 		if(userBirthday.after(now)) {
 			// BAD_REQUEST
 			// 입력한 생년월일이 현재 시간보다 늦으면 에러 출력
-			List<SignupResultFields> fields = utilCollection.getfields();
+			List<SignupResultFields> fields = utilCollection.getfields("생년월일","생년월일은 현재 시간보다 늦을 수 없습니다.");
 			throw new ErrorException(ErrorCode.NUMBER_1002,"입력항목 오류",true,fields);
 		}else {
 			// 기존 백업파일에 이어 붙이기
@@ -68,6 +72,18 @@ public class UserServiceNoneDB implements UserDataService{
 		return result;
 	}
 
+	// 회원가입 시 유효성 체크
+	@Override
+	public Map<String, String> validateHandling(Errors errors){
+		Map<String, String> validatorResult = new HashMap<>();
+
+		for(FieldError error : errors.getFieldErrors()) {
+			String validKeyName = String.format("valid_%s", error.getField());
+			validatorResult.put(validKeyName, error.getDefaultMessage());
+		}
+		return validatorResult;
+	}
+	
 	// 아이디 중복확인
 	@Override
 	public int idDuplicationCheck(String id) {

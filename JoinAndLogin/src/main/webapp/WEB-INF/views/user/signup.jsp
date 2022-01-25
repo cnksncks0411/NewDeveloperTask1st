@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -39,10 +39,10 @@
 			
 			if($("#id").val()==""){
 				alert("아이디를 입력해주세요.");
-			}else if(patternId.test($("#id").val())!=true){
-				alert("유효하지 않은 아이디입니다.");
+			}/*else if(patternId.test($("#id").val()) != true){
+				alert("사용할 수 없는 아이디입니다.");
 				$("#id").val("");
-			}else{
+			}*/else{
 				$.ajax({
 					url:"./checkId",
 					type:"get",
@@ -67,6 +67,22 @@
 			}
 		});
 	});	// id 중복확인 끝
+</script>
+<script type="text/javascript">
+	$(function(){
+		$("#id").keyup(function() {
+			var patternId = /^[a-zA-Z]{1}[a-zA-Z0-9]{3,15}$/;
+			
+			if(patternId.test($("#id").val()) != true) {
+				$("#idtxt").css("color", "red");
+				$("#idtxt").css("font-size", "11px");
+				$("#idtxt").css("font-weight", "bold");
+				$("#idtxt").text("아이디는 영문자로 시작하여 4~16자의 영문, 숫자 조합이어야 합니다.");
+			}else{
+				$("#idtxt").text("");
+			}
+		});
+	});
 </script>
 <script type="text/javascript">
 	// 패스워드 일치 확인
@@ -147,43 +163,46 @@
 
 .notice {
 	font-size: 11px;
-	color: gray;
+	color: red;
 }
 </style>
+
 </head>
 <body>
-	<form action="./join" method="post" name="join" id="join">
+	<form action="./signup" method="post" name="join" id="join">
 		<table>
 			<tr>
 				<td class="title">아이디* :</td>
-				<td><input type="text" name="id" id="id" maxlength="16"></td>
+				<td><input type="text" name="id" id="id" maxlength="16" value="${userDto.id }"></td>
 				<td><input type="button" value="중복확인" id="idCheck"></td>
 				<td><input type="hidden" id="clickChk" value="no"/></td>
 			</tr>
 			<tr>
-				<td colspan="3" class="notice">※ 첫 글자는 영문으로 4~16자 까지 가능, 영문,숫자만 사용 가능</td>
+				<td colspan="3" class="notice" id="idtxt">${valid_id }</td>
 			</tr>
 			<tr>
 				<td class="title">비밀번호* :</td>
 				<td><input type="password" name="pw" id="pw" maxlength="15" /></td>
 			</tr>
 			<tr>
-				<td colspan="3" class="notice">※ 영문/숫자 혼용으로 8~16자 까지 가능</td>
-			</tr>
-			<tr>
 				<td class="title">비밀번호 확인* :</td>
 				<td><input type="password" id="pw2" maxlength="16" /></td>
 			</tr>
 			<tr>
-				<td colspan="3" id="pwtxt"><td>
+				<td colspan="3" class="notice" id="pwtxt">${valid_pw }<td>
 			</tr>
 			<tr>
 				<td class="title">이름* :</td>
-				<td><input type="text" name="name" id="name" maxlength="8"></td>
+				<td><input type="text" name="name" id="name" maxlength="8" value="${userDto.name }"></td>
 			</tr>
 			<tr>
 				<td class="title">회원등급* :</td>
-				<td><input type="text" name="level" id="level" readonly>
+				<td><input type="text" name="level" id="level" value="${userDto.level }" readonly>
+				<script>
+				$(function(){
+					$("#levelList").val("${userDto.level }").prop("selected",true);
+				});
+				</script>
 					<select id="levelList" name="levelList">
 						<option value="" selected="selected"></option>
 						<option value="A">A등급</option>
@@ -194,11 +213,11 @@
 			</tr>
 			<tr>
 				<td class="title">자기소개 :</td>
-				<td><textarea rows="10" cols="30" maxlength="256" name="desc" id="desc"></textarea></td>
+				<td><textarea rows="10" cols="30" maxlength="256" name="desc" id="desc">${userDto.desc }</textarea></td>
 			</tr>
 			<tr>
 				<td class="title">생년월일* :</td>
-				<td><input type="datetime-local" name="regDate" id="regDate"></td>
+				<td><input type="datetime-local" name="regDate" id="regDate" value="${userDto.regDate }"></td>
 			</tr>
 			<tr>
 				<td><input type="submit" value="회원가입" id="joinBtn"/></td>

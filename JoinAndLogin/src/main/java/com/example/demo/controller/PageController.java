@@ -49,13 +49,11 @@ public class PageController {
 					String sessinKey = cookie.getValue();
 					// 쿠키 만료시간과 현재 시간 비교 후 만료되지 않은 정보 저장
 					UserDto userDto = userDataService.checkCookieExpirationTime(sessinKey);
-					// 쿠키가 만료되지 않았다면
-					if(userDto!=null) {
-						session.setAttribute("login", userDto);
-						return "/user/main";
-					}
+					session.setAttribute("login", userDto);
+					return "redirect:/user/main";
+				}else {
+					return "/user/signin";
 				}
-				return "/user/signin";
 			}
 			return "/user/main";
 		}

@@ -1,15 +1,19 @@
 package com.example.demo.controller;
 
 import java.sql.Timestamp;
+import java.util.Map;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,11 +35,24 @@ public class UserFunctionController{
 	UserDataService userDataService;
 	
 	// 회원가입 기능 구현
-	@PostMapping("/join")
-	public String join(UserDto userDto, Model model) {
-		int result = userDataService.join(userDto);
+	@PostMapping("/signup")
+	public String join(@Valid UserDto userDto, Errors errors, Model model) {
+		int result = 0;
+		if(errors.hasErrors()) {
+			// 회원가입 실패 시, 입력 데이터를 유지
+			model.addAttribute("userDto",userDto);
+			
+			// 유효성 통과 못한 필드와 메시지 핸들링
+			Map<String, String> validatorResult = userDataService.validateHandling(errors);
+			for(String key : validatorResult.keySet()) {
+				model.addAttribute(key, validatorResult.get(key));
+			}
+			return "/user/signup";
+		}
+		result = userDataService.join(userDto);
 		model.addAttribute("result", result);
 		return "/user/signup";
+
 	}
 	
 	// 아이디 중복확인
@@ -58,7 +75,7 @@ public class UserFunctionController{
 					Cookie auto = new Cookie("info",session.getId());
 					auto.setPath("/");
 					// 쿠키 유지 시간 5분
-					int amount = 60*5;
+					int amount = 60;
 					auto.setMaxAge(amount);
 					response.addCookie(auto);
 					// 쿠키 만료 시간

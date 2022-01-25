@@ -1,6 +1,9 @@
 package com.example.demo.service;
 
 import java.sql.Timestamp;
+import java.util.Map;
+
+import org.springframework.validation.Errors;
 
 import com.example.demo.dto.UserDto;
 
@@ -20,6 +23,9 @@ public interface UserDataService {
 	
 	// 쿠키 정보 있는 지 확인
 	UserDto checkCookieExpirationTime(String sessinKey);
+
+	// 유효성 검사
+	Map<String, String> validateHandling(Errors errors);
 	
 	
 }

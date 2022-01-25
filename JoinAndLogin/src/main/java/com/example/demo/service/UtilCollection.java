@@ -48,8 +48,8 @@ public class UtilCollection {
 	}
 	
 	// 에러 필드
-	public List<SignupResultFields> getfields(){
-		SignupResultFields s = new SignupResultFields("생년월일","생년월일은 현재 시간보다 늦을 수 없습니다.");
+	public List<SignupResultFields> getfields(String field, String reason){
+		SignupResultFields s = new SignupResultFields(field, reason);
 		List<SignupResultFields> fields = new ArrayList<SignupResultFields>();
 		fields.add(s);
 		
