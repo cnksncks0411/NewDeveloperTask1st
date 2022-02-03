@@ -38,7 +38,7 @@ public class UserServiceNoneDB implements UserDataService{
 		// 유저 생년월일 Timestamp 포맷으로 변환하여 저장
 		utilCollection.setUserBirthday(userDto);
 		// Timestamp 포맷으로 변환 후 유저의 생년월일 가져오기
-		Date userBirthday = utilCollection.getUserBirthday(userDto.getRegDate());
+		Date userBirthday = utilCollection.getUserBirthday(userDto.getRegdate());
 		// 비교할 현재 시간
 		Date now = new Date();
 		int result = 0;
@@ -63,7 +63,7 @@ public class UserServiceNoneDB implements UserDataService{
 								+"/"+"\"\""
 								+"/\""+userDto.getLevel()+"\""
 								+"/\""+userDto.getDesc()+"\""
-								+"/\""+userDto.getRegDate()+"\"");
+								+"/\""+userDto.getRegdate()+"\"");
 				result=1;
 			} catch (IOException e1) {
 				e1.printStackTrace();
@@ -191,5 +191,27 @@ public class UserServiceNoneDB implements UserDataService{
 			e1.printStackTrace();
 		}
 		return userDto;
+	}
+	
+	// 로그인 기능
+	@Override
+	public List<UserDto> search(String category, String keyword){
+		if(category.equals("id")) {
+			
+		}else if(category.equals("name")) {
+			
+		}else if(category.equals("level")) {
+			
+		}else if(category.equals("desc")) {
+			
+		}
+		
+		return null;
+	}
+
+	@Override
+	public String getServiceId() {
+		
+		return "noneqlService";
 	}
 }

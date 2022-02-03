@@ -17,6 +17,7 @@ import com.example.demo.exception.ErrorCode;
 import com.example.demo.exception.ErrorException;
 import com.example.demo.exception.SignupResultFields;
 import com.example.demo.mapper.UserMapper;
+import com.example.demo.mapper.UserRepository;
 
 @Service
 public class UserServicePostgreSQL implements UserDataService{
@@ -32,7 +33,7 @@ public class UserServicePostgreSQL implements UserDataService{
 		// 유저 생년월일 Timestamp 포맷으로 변환하여 저장
 		utilCollection.setUserBirthday(userDto);
 		// Timestamp 포맷으로 변환 후 유저의 생년월일 가져오기
-		Date userBirthday = utilCollection.getUserBirthday(userDto.getRegDate());
+		Date userBirthday = utilCollection.getUserBirthday(userDto.getRegdate());
 		// 비교할 현재 시간
 		Date now = new Date();
 		int result = 0;
@@ -109,5 +110,30 @@ public class UserServicePostgreSQL implements UserDataService{
 			e.printStackTrace();
 		}
 		return userDto;
+	}
+	
+	@Autowired
+	UserRepository userRepository;
+	
+	// 검색 기능
+	@Override
+	public List<UserDto> search(String category, String keyword){
+		List<UserDto> user = null;
+		
+		if(category.equals("id")) {
+			user = userRepository.findByIdContaining(keyword);
+		}else if(category.equals("name")) {
+			user = userRepository.findByNameContaining(keyword);
+		}else if(category.equals("level")) {
+			user = userRepository.findByLevel(keyword.toUpperCase());
+		}else if(category.equals("desc")) {
+			user = userRepository.findByDescContaining(keyword);
+		}
+		return user;
+	}
+
+	@Override
+	public String getServiceId() {
+		return "postgreSqlService";
 	}
 }

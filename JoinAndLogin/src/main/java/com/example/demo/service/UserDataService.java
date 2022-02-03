@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.validation.Errors;
@@ -27,5 +28,8 @@ public interface UserDataService {
 	// 유효성 검사
 	Map<String, String> validateHandling(Errors errors);
 	
-	
+	String getServiceId();
+
+	// 검색 기능
+	List<UserDto> search(String category, String keyword);
 }

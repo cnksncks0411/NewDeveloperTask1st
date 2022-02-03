@@ -24,11 +24,11 @@ public class UtilCollection {
 	}
 	
 	// 유저 생년월일 얻기
-	public Date getUserBirthday(String regDate) {
+	public Date getUserBirthday(String regdate) {
 		SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date userBirthday = null;
 		try {
-			userBirthday = transFormat.parse(regDate);
+			userBirthday = transFormat.parse(regdate);
 		} catch (ParseException e2) {
 			e2.printStackTrace();
 			// 기타 오류
@@ -42,9 +42,9 @@ public class UtilCollection {
 	
 	// 유저 생년월일 Timestamp 변환
 	public void setUserBirthday(UserDto userDto) {
-		String regDate = userDto.getRegDate().replace('T', ' ');
-		regDate +=":00";
-		userDto.setRegDate(regDate);
+		String regdate = userDto.getRegdate().replace('T', ' ');
+		regdate +=":00";
+		userDto.setRegdate(regdate);
 	}
 	
 	// 에러 필드

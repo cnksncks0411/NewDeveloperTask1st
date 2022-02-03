@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.Cookie;
@@ -12,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,18 +33,27 @@ public class UserFunctionController{
 	// @Qualifier("userServicePostgreSQL") => DB 연결
 	// @Qualifier("userServiceNoneDB") => 백업 파일 연결
 	@Qualifier("userServicePostgreSQL")
-	UserDataService userDataService;
+	private UserDataService userDataService;
+	
+//	private Map<String,UserDataService> serviceMap = new HashMap<>();
+//	
+//	@Autowired
+//	public UserFunctionController ( List<UserDataService> serviceList) {
+//		for(UserDataService service : serviceList) {
+//			this.serviceMap.put(service.getServiceId(), service);
+//		}
+//	}
 	
 	// 회원가입 기능 구현
 	@PostMapping("/signup")
-	public String join(@Valid UserDto userDto, Errors errors, Model model) {
+	public String join(@Valid UserDto userDto, BindingResult binding, Model model) {
 		int result = 0;
-		if(errors.hasErrors()) {
+		if(binding.hasErrors()) {
 			// 회원가입 실패 시, 입력 데이터를 유지
 			model.addAttribute("userDto",userDto);
 			
 			// 유효성 통과 못한 필드와 메시지 핸들링
-			Map<String, String> validatorResult = userDataService.validateHandling(errors);
+			Map<String, String> validatorResult = userDataService.validateHandling(binding);
 			for(String key : validatorResult.keySet()) {
 				model.addAttribute(key, validatorResult.get(key));
 			}
@@ -93,4 +103,21 @@ public class UserFunctionController{
 		}
 		return "redirect:/user/main";
 	}
+	
+	// 검색 기능
+	@GetMapping("/search")
+	@ResponseBody
+	public List<UserDto> getMember(@RequestParam("category") String category, @RequestParam("keyword") String keyword, Model model){
+		List<UserDto> user = null;
+		try {
+			user = userDataService.search(category, keyword);
+			model.addAttribute("user", user);
+		} catch (Exception e) {
+			return null;
+		}
+		
+		
+		return user;
+	}
+	
 }
